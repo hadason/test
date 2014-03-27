@@ -1,0 +1,24 @@
+<FeedbackController+Browser> {
+  AppCodeName = Mozilla
+  AppName = Netscape
+  AppVersion = 5.0 (Windows)
+  CookieEnabled = True
+  Online = True
+  Platform = Win32
+  Plugins = [
+    Shockwave Flash,
+    Google Update,
+    Google Update,
+    Java(TM) Platform SE 7 U51,
+    Java Deployment Toolkit 7.0.510.13,
+    Adobe Acrobat,
+    Adobe Acrobat,
+    Silverlight Plug-In,
+    NVIDIA 3D Vision,
+    NVIDIA 3D VISION,
+    RIM Handheld Application Loader,
+    Microsoft Office 2010,
+    Microsoft Office 2010
+  ]
+  UserAgent = Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0
+}
