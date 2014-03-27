@@ -1,0 +1,10 @@
+<FeedbackController+Browser> {
+  AppCodeName = Mozilla
+  AppName = Netscape
+  AppVersion = 5.0 (Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; rv:11.0) like Gecko
+  CookieEnabled = True
+  Online = True
+  Platform = Win32
+  Plugins = [Shockwave Flash, Silverlight Plug-In]
+  UserAgent = Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; rv:11.0) like Gecko
+}
