@@ -1,0 +1,191 @@
+<!--<![endif]--><head style=""><style style="" type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\:form{display:block;}</style>
+    <meta style="" charset="utf-8">
+    <meta style="" http-equiv="X-UA-Compatible" content="IE=edge">
+    <title style="">Billing - BDB Payroll</title>
+    <meta style="" name="description" content="">
+    <meta style="" name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <link style="" rel="stylesheet" href="styles/less/7f309f06.app.css">
+
+    <link style="" rel="stylesheet" href="styles/dc1bb280.print.css" media="print">
+
+    <!-- website icon -->
+    <link style="" rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <!-- iOS / android icons: see http://mathiasbynens.be/notes/touch-icons#sizes -->
+    <!-- For third-generation iPad with high-resolution Retina display: -->
+    <link style="" rel="apple-touch-icon" sizes="144x144" href="images/brand/iconset/icon-144.png">
+    <!-- For iPhone with high-resolution Retina display: -->
+    <link style="" rel="apple-touch-icon" sizes="114x114" href="images/brand/iconset/icon-114.png">
+    <!-- For first- and second-generation iPad: -->
+    <link style="" rel="apple-touch-icon" sizes="72x72" href="images/brand/iconset/icon-72.png">
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <link style="" rel="apple-touch-icon" href="images/brand/iconset/icon-57.png">
+    <!-- ----------------------------------------------------------------------- -->
+</head>
+
+<body class="ng-scope" ng-app="bdbBillingApp" ng-controller="MainCtrl">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="bower_components/es5-shim/es5-shim.js"></script>
+      <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+
+    <!-- Add your site or application content here -->
+    <div id="wrap" class="sidenav-back-holder">
+        <div id="main">
+            <div class="navbar navbar-fixed-top ">
+                <div class="navbar-inner">
+                    <a style="" class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="brand">
+                        <a href="#/">
+                            <h1 class="logo-header">
+                                BDB Payroll
+                            </h1>
+                        </a>
+                    </div>
+                    <div class="nav-collapse collapse">
+                        <!-- ngInclude: 'partials/global/top-navigation.html' --><div class="ng-scope" ng-include="'partials/global/top-navigation.html'"><ul class="nav ng-scope">
+<!--
+    <li ng-class="{active: isCurrentNav('/employees', true)}">
+        <a href="#/">Employees</a>
+    </li>
+    <li ng-class="{active: isCurrentNav('/payroll', true)}">
+        <a href="#/">Payroll</a>
+    </li>
+-->
+    <!--<li ng-class="{active: isCurrentNav('/reports', true)}">
+        <a href="/Reports">Reports</a>
+    </li>-->
+    <li class="active" ng-class="{active: isCurrentNav('/divisions', true)}">
+        <a href="#/divisions">Company Setup</a>
+    </li>
+    <li class="divider-vertical"></li>
+    <li class="" ng-class="{active: isCurrentNav('/system', true)}">
+        <a href="#/system">System</a>
+    </li>
+</ul>
+
+<ul class="nav pull-right ng-scope">
+    <li class="navbar-text">
+        <span style="" class="ng-hide" ng-show="context.division &amp;&amp; !isCurrentNavSystem()">
+            Company:
+            <strong class="ng-binding" ng-bind="context.division.code"></strong>
+        </span>
+    </li>
+    <li class="divider-vertical"></li>
+    <!-- ngIf: user --><li ng-if="user" class="navbar-text ng-scope">
+        <i class="icon-user"></i>
+        <span class="ng-binding" ng-bind="user.username">hadason@bdb</span>
+    </li><!-- end ngIf: user -->
+    <li>
+        <button class="btn btn-link btn-logout" ng-click="signOut()">Sign Out</button>
+    </li>
+</ul>
+</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid main-content">
+                <div class="row-fluid">
+                    <div class="span2 sidenav-fake"></div>
+                    <div class="span2 sidenav-back sidenav">
+                        <!-- ngInclude: 'partials/global/side-navigation.html' --><div class="ng-scope" ng-include="'partials/global/side-navigation.html'"><script class="ng-scope" type="text/ng-template" id="navigation-line.html">
+    <a ng-show="$parent.node.path" href="#{{$parent.node.fullPath}}" ng-bind="$parent.node.title"></a>
+    <span ng-hide="$parent.node.path" class="{{$parent.node.className}}" ng-bind="$parent.node.title"></span>
+    <ul class="nav nav-list" ng-if="$parent.node.children">
+        <li ng-repeat="node in $parent.node.children"
+            ng-include="'navigation-line.html'"
+            ng-class="{ active: isCurrentNav(node.fullPath, true) }"></li>
+    </ul>
+</script>
+
+<ul class="nav nav-list ng-scope">
+    <li ng-show="!isCurrentNavSystem()" class="nav-item-padded division-dropdown-container">
+        <label for="s2id_autogen1">Company:</label>
+        <!--TODO: Find a better way to set the width of the selector without setting it in the HTML -->
+        <div style="width: 100%;" id="s2id_sideNavDivisionSelector" class="select2-container division-selector ng-pristine ng-valid"><a href="javascript:void(0)" onclick="return false;" class="select2-choice" tabindex="-1">   <span class="select2-chosen">&nbsp;</span><abbr style="" class="select2-search-choice-close"></abbr>   <span class="select2-arrow"><b></b></span></a><input id="s2id_autogen1" class="select2-focusser select2-offscreen" type="text"></div><input tabindex="-1" id="sideNavDivisionSelector" class="division-selector ng-pristine ng-valid select2-offscreen" ng-model="context.division" ui-select2="getDivisionSelect2Options('100%')" ng-disabled="isCurrentNav('/system')" type="text">
+    </li>
+    <li ng-show="!isCurrentNavSystem()" class="divider divider-thin"></li>
+    <!-- ngRepeat: node in navigation.currentRoot.children -->
+</ul>
+
+</div>
+                    </div>
+
+                    <div class="span10 main-content-inner">
+
+                        <div class="main-backdrop ng-hide" ng-show="loading">
+                            <div bdb-loading=""><div><strong class="loading-text">Loading...</strong><div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div></div></div>
+                        </div>
+
+                        <!-- ngView:  --><div class="ng-scope" ng-show="!loading" ng-view=""><div class="division-dashboard ng-scope">
+    <h2 class="hidden-phone">← Pick a company on the left to get started.</h2>
+
+    <div class="lead">
+        <p>For <strong>general billing</strong>, including <strong>invoices, payments, and manual charges</strong>,
+            click on <a href="#/system">System</a> in the top menu.
+    </p></div>
+</div></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>© BDB Payroll Inc.</p>
+    </div>
+
+    <script src="scripts/9d088d72.plugins.js"></script>
+
+    <!-- TODO: Make this not so ugly. Please. -->
+    <script>
+        $(function () {
+            $.feedback({
+                ajaxURL: '/BillingService/api/billing/feedback',
+                html2canvasURL: 'bower_components/feedback/html2canvas.js'
+            });
+        });
+    </script>
+
+    <script src="scripts/67707fcd.closure-out.js"></script>
+
+
+    <script src="directives/search/bdb-search.html" type="application/ng-template" id="bdb-search.html"></script>
+
+    <script src="bower_components/angular-simple-grid/src/simple-grid.html" type="application/ng-template" id="simple-grid.html"></script>
+
+
+
+
+<button style="display: none;" class="feedback-btn feedback-btn-gray">Send feedback</button><div style="display: none;" class="select2-drop-mask" id="select2-drop-mask"></div><div style="left: 15px; top: 124px; bottom: auto; display: none; width: 246px;" class="select2-drop select2-display-none select2-with-searchbox select2-drop-auto-width select2-drop-active">   <div class="select2-search">       <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input" type="text">   </div>   <ul class="select2-results"></ul></div><div style="z-index: 1050;" index="0" modal-window="" class="modal fade  in" ng-class="{in: animate}" ng-style="{'z-index': 1050 + index*10}" ng-transclude=""><div class="modal-header ng-scope">
+    <button type="button" class="close" ng-click="$close()">×</button>
+    <h3>Oops...</h3>
+</div>
+<div class="modal-body test-error-modal ng-scope">
+    <h4 class="ng-binding">Something didn't work.</h4>
+
+    <!-- ngIf: body -->
+
+
+    <!-- ngIf: errors.length --><div class="ng-scope" ng-if="errors.length">
+        <hr>
+        <small>Some details to help our gurus fix it:</small>
+        <pre class="pre-scrollable"><!-- ngRepeat: (message, count) in getErrorCounts() --><span class="ng-scope" ng-repeat="(message, count) in getErrorCounts()"><small class="ng-binding">Client error code: 5898 <!-- ngIf: count > 1 --></small><br></span><!-- end ngRepeat: (message, count) in getErrorCounts() --></pre>
+    </div><!-- end ngIf: errors.length -->
+</div>
+<div class="modal-footer ng-scope">
+    <button class="btn btn-primary" ng-click="$close()">Close</button>
+</div>
+</div><div style="z-index: 1040;" modal-backdrop="" class="modal-backdrop fade in" ng-class="{in: animate}" ng-style="{'z-index': 1040 + index*10}" ng-click="close($event)"></div><div style="position: absolute; left: 0px; top: 0px;" id="feedback-module"><div style="display: block;" id="feedback-highlighter"><div class="feedback-logo">Feedback</div><p>Click and drag on the page to help us better understand your feedback. You can move this dialog if it's in the way.</p><button class="feedback-sethighlight feedback-active"><div class="ico"></div><span>Highlight</span></button><label>Highlight areas relevant to your feedback.</label><button class="feedback-setblackout"><div class="ico"></div><span>Black out</span></button><label class="lower">Black out any personal information.</label><div class="feedback-buttons"><button id="feedback-highlighter-next" class="feedback-next-btn feedback-btn-gray">Next</button></div><div class="feedback-wizard-close"></div></div><div id="feedback-overview"><div class="feedback-logo">Feedback</div><div id="feedback-overview-description"><div id="feedback-overview-description-text"><h3>Description</h3><h3 class="feedback-additional">Additional info</h3><div id="feedback-additional-none"><span>None</span></div><div style="display: block;" id="feedback-browser-info"><span>Browser Info</span></div><div style="display: block;" id="feedback-page-info"><span>Page Info</span></div><div id="feedback-page-structure"><span>Page Structure</span></div></div></div><div id="feedback-overview-screenshot"><h3>Screenshot</h3></div><div class="feedback-buttons"><button id="feedback-submit" class="feedback-submit-btn feedback-btn-blue">Submit</button><button id="feedback-overview-back" class="feedback-back-btn feedback-btn-gray">Back</button></div><div id="feedback-overview-error">Please enter a description.</div><div class="feedback-wizard-close"></div></div><canvas style="z-index: 30000; cursor: crosshair;" height="636" width="1903" id="feedback-canvas"></canvas><div id="feedback-helpers"></div><input id="feedback-note" name="feedback-note" type="hidden"></div></body>
