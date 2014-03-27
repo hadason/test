@@ -1,0 +1,474 @@
+<!--<![endif]--><head><style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\:form{display:block;}</style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Billing - BDB Payroll</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <link rel="stylesheet" href="styles/less/7f309f06.app.css">
+
+    <link rel="stylesheet" href="styles/dc1bb280.print.css" media="print">
+
+    <!-- website icon -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <!-- iOS / android icons: see http://mathiasbynens.be/notes/touch-icons#sizes -->
+    <!-- For third-generation iPad with high-resolution Retina display: -->
+    <link rel="apple-touch-icon" sizes="144x144" href="images/brand/iconset/icon-144.png">
+    <!-- For iPhone with high-resolution Retina display: -->
+    <link rel="apple-touch-icon" sizes="114x114" href="images/brand/iconset/icon-114.png">
+    <!-- For first- and second-generation iPad: -->
+    <link rel="apple-touch-icon" sizes="72x72" href="images/brand/iconset/icon-72.png">
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <link rel="apple-touch-icon" href="images/brand/iconset/icon-57.png">
+    <!-- ----------------------------------------------------------------------- -->
+</head>
+
+<body class="ng-scope" ng-app="bdbBillingApp" ng-controller="MainCtrl">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="bower_components/es5-shim/es5-shim.js"></script>
+      <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+
+    <!-- Add your site or application content here -->
+    <div id="wrap" class="sidenav-back-holder">
+        <div id="main">
+            <div class="navbar navbar-fixed-top ">
+                <div class="navbar-inner">
+                    <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="brand">
+                        <a href="#/">
+                            <h1 class="logo-header">
+                                BDB Payroll
+                            </h1>
+                        </a>
+                    </div>
+                    <div class="nav-collapse collapse">
+                        <!-- ngInclude: 'partials/global/top-navigation.html' --><div class="ng-scope" ng-include="'partials/global/top-navigation.html'"><ul class="nav ng-scope">
+<!--
+    <li ng-class="{active: isCurrentNav('/employees', true)}">
+        <a href="#/">Employees</a>
+    </li>
+    <li ng-class="{active: isCurrentNav('/payroll', true)}">
+        <a href="#/">Payroll</a>
+    </li>
+-->
+    <!--<li ng-class="{active: isCurrentNav('/reports', true)}">
+        <a href="/Reports">Reports</a>
+    </li>-->
+    <li class="" ng-class="{active: isCurrentNav('/divisions', true)}">
+        <a href="#/divisions">Company Setup</a>
+    </li>
+    <li class="divider-vertical"></li>
+    <li class="active" ng-class="{active: isCurrentNav('/system', true)}">
+        <a href="#/system">System</a>
+    </li>
+</ul>
+
+<ul class="nav pull-right ng-scope">
+    <li class="navbar-text">
+        <span class="ng-hide" ng-show="context.division &amp;&amp; !isCurrentNavSystem()">
+            Company:
+            <strong class="ng-binding" ng-bind="context.division.code">1EE-001</strong>
+        </span>
+    </li>
+    <li class="divider-vertical"></li>
+    <!-- ngIf: user --><li ng-if="user" class="navbar-text ng-scope">
+        <i class="icon-user"></i>
+        <span class="ng-binding" ng-bind="user.username">ahollender@bdb</span>
+    </li><!-- end ngIf: user -->
+    <li>
+        <button class="btn btn-link btn-logout" ng-click="signOut()">Sign Out</button>
+    </li>
+</ul>
+</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid main-content">
+                <div class="row-fluid">
+                    <div class="span2 sidenav-fake"></div>
+                    <div class="span2 sidenav-back sidenav">
+                        <!-- ngInclude: 'partials/global/side-navigation.html' --><div class="ng-scope" ng-include="'partials/global/side-navigation.html'"><script class="ng-scope" type="text/ng-template" id="navigation-line.html">
+    <a ng-show="$parent.node.path" href="#{{$parent.node.fullPath}}" ng-bind="$parent.node.title"></a>
+    <span ng-hide="$parent.node.path" class="{{$parent.node.className}}" ng-bind="$parent.node.title"></span>
+    <ul class="nav nav-list" ng-if="$parent.node.children">
+        <li ng-repeat="node in $parent.node.children"
+            ng-include="'navigation-line.html'"
+            ng-class="{ active: isCurrentNav(node.fullPath, true) }"></li>
+    </ul>
+</script>
+
+<ul class="nav nav-list ng-scope">
+    <li ng-show="!isCurrentNavSystem()" class="nav-item-padded division-dropdown-container ng-hide">
+        <label for="s2id_autogen1">Company:</label>
+        <!--TODO: Find a better way to set the width of the selector without setting it in the HTML -->
+        <div style="width: 100%;" id="s2id_sideNavDivisionSelector" class="select2-container division-selector ng-valid ng-dirty"><a href="javascript:void(0)" onclick="return false;" class="select2-choice" tabindex="-1">   <span class="select2-chosen">1EE-001 - Express Equipment Repair Inc</span><abbr class="select2-search-choice-close"></abbr>   <span class="select2-arrow"><b></b></span></a><input id="s2id_autogen1" class="select2-focusser select2-offscreen" type="text"></div><input tabindex="-1" id="sideNavDivisionSelector" class="division-selector ng-valid select2-offscreen ng-dirty" ng-model="context.division" ui-select2="getDivisionSelect2Options('100%')" ng-disabled="isCurrentNav('/system')" type="text">
+    </li>
+    <li ng-show="!isCurrentNavSystem()" class="divider divider-thin ng-hide"></li>
+    <!-- ngRepeat: node in navigation.currentRoot.children --><!-- ngInclude: 'navigation-line.html' --><li class="ng-scope" ng-repeat="node in navigation.currentRoot.children" ng-include="'navigation-line.html'" ng-class="{ active: isCurrentNav(node.fullPath, false) }">
+    <a class="ng-scope ng-binding" ng-show="$parent.node.path" href="#/system/billing" ng-bind="$parent.node.title">Billing</a>
+    <span ng-hide="$parent.node.path" class="ng-hide" ng-bind="$parent.node.title">Billing</span>
+    <!-- ngIf: $parent.node.children --><ul class="nav nav-list ng-scope" ng-if="$parent.node.children">
+        <!-- ngRepeat: node in $parent.node.children --><!-- ngInclude: 'navigation-line.html' --><li class="ng-scope" ng-repeat="node in $parent.node.children" ng-include="'navigation-line.html'" ng-class="{ active: isCurrentNav(node.fullPath, true) }">
+    <a class="ng-scope ng-binding" ng-show="$parent.node.path" href="#/system/billing/dashboard" ng-bind="$parent.node.title">Dashboard</a>
+    <span ng-hide="$parent.node.path" class="ng-hide" ng-bind="$parent.node.title">Dashboard</span>
+    <!-- ngIf: $parent.node.children -->
+</li><!-- end ngRepeat: node in $parent.node.children --><!-- ngInclude: 'navigation-line.html' --><li class="ng-scope" ng-repeat="node in $parent.node.children" ng-include="'navigation-line.html'" ng-class="{ active: isCurrentNav(node.fullPath, true) }">
+    <a class="ng-scope ng-binding" ng-show="$parent.node.path" href="#/system/billing/invoices" ng-bind="$parent.node.title">Invoices</a>
+    <span ng-hide="$parent.node.path" class="ng-hide" ng-bind="$parent.node.title">Invoices</span>
+    <!-- ngIf: $parent.node.children -->
+</li><!-- end ngRepeat: node in $parent.node.children --><!-- ngInclude: 'navigation-line.html' --><li class="ng-scope active" ng-repeat="node in $parent.node.children" ng-include="'navigation-line.html'" ng-class="{ active: isCurrentNav(node.fullPath, true) }">
+    <a class="ng-scope ng-binding" ng-show="$parent.node.path" href="#/system/billing/manual-charges" ng-bind="$parent.node.title">Manual Charges</a>
+    <span ng-hide="$parent.node.path" class="ng-hide" ng-bind="$parent.node.title">Manual Charges</span>
+    <!-- ngIf: $parent.node.children -->
+</li><!-- end ngRepeat: node in $parent.node.children -->
+    </ul><!-- end ngIf: $parent.node.children -->
+</li><!-- end ngRepeat: node in navigation.currentRoot.children -->
+</ul>
+
+</div>
+                    </div>
+
+                    <div class="span10 main-content-inner">
+
+                        <div class="main-backdrop ng-hide" ng-show="loading">
+                            <div bdb-loading=""><div><strong class="loading-text">Loading...</strong><div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div></div></div>
+                        </div>
+
+                        <!-- ngView:  --><div class="ng-scope" ng-show="!loading" ng-view=""><div class="system-billing-manual-charges ng-scope">
+    <!-- ngIf: !embedded --><div class="ng-scope" ng-if="!embedded">
+        <h2>Manual Charges</h2>
+
+        <ul class="menu-header nav nav-list inline">
+            <li class="nav-text">Search:</li>
+            <li>
+                <div class="manual-charge-search ng-isolate-scope" bdb-search="filterExpression.$" placeholder="Text in any field..."><form name="searchForm" class="form-inline ng-pristine ng-valid">
+    <div class="input-append">
+        <input class="ng-pristine ng-valid" placeholder="Text in any field..." ng-model="pendingSearchQuery" ng-disabled="searchDisabled()" type="text">
+        <button type="submit" class="btn" ng-disabled="searchDisabled()" ng-click="search()"><i class="icon-search"></i></button>
+    </div>
+</form>
+</div>
+            </li>
+            <li>
+                <form class="form-inline ng-pristine ng-valid">
+                    <label for="selectFilter">Filter:</label>
+                    <select class="ng-pristine ng-valid" id="selectFilter" ng-options="filter.value as filter.title for (key, filter) in billedFilterOptions" ng-model="filterExpression.isBilled"><option value="all">All</option><option value="billed">Billed</option><option selected="selected" value="notBilled">Not Billed</option></select>
+                    
+                </form>
+            </li>
+            <li class="divider-vertical"></li>
+            <li>
+                <button class="btn btn-primary" ng-click="addChargeItem()"><i class="icon-plus icon-white"></i> Create
+                    Manual Charge
+                </button>
+            </li>
+        </ul>
+        <div class="menu-body menu-body-table manual-charges-search-results">
+            <!--<div simple-grid="manualChargesGrid" class="manual-charges-grid table-show-dirty table-hover">-->
+            <!--</div>-->
+            <table class="table table-striped table-show-dirty">
+                <thead>
+                <tr>
+                    <th class="ng-binding">Company</th>
+                    <th class="ng-binding">Item</th>
+                    <th class="ng-binding">Description</th>
+                    <th class="ng-binding">Base Charge</th>
+                    <th class="ng-binding">Unit Price</th>
+                    <th class="ng-binding">Quantity</th>
+                    <th class="ng-binding">Extended Price</th>
+                    <th class="ng-binding">Billed</th>
+                    <th class="ng-binding">Created Date</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <!--<tr ng-show="!(data.searchedInvoices | filter:invoiceSearchQuery).length">-->
+                <!--<tr>-->
+                <!--<td colspan="0">-->
+                <!--<em ng-show="!searchInProgress">No results</em>-->
+
+                <!--<div ng-show="searchInProgress">-->
+                <!--<div class="progress progress-striped active searchProgressBar">-->
+                <!--<div class="bar" style="width: 100%;">Searching...</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</td>-->
+                <!--</tr>-->
+                <!-- ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">1AB-001</td>
+                    <td class="ng-binding">REV</td>
+                    <td class="ng-binding">DD REVERSAL</td>
+                    <td class="ng-binding">$5.00</td>
+                    <td class="ng-binding">$50.00</td>
+                    <td class="ng-binding">0</td>
+                    <td class="ng-binding">$5.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Feb 18, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">2DD-001</td>
+                    <td class="ng-binding">HS</td>
+                    <td class="ng-binding">HOSTING SERVICES</td>
+                    <td class="ng-binding">$5.00</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">0</td>
+                    <td class="ng-binding">$5.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Feb 19, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">2EC-001</td>
+                    <td class="ng-binding">DD</td>
+                    <td class="ng-binding">DIRECT DEPOSIT</td>
+                    <td class="ng-binding">$11.00</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">0</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Feb 19, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">4GL-001</td>
+                    <td class="ng-binding">CK</td>
+                    <td class="ng-binding"># OF TRANSACTIONS</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">$0.75</td>
+                    <td class="ng-binding">20</td>
+                    <td class="ng-binding">$15.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Feb 19, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">4GC-001</td>
+                    <td class="ng-binding">DL</td>
+                    <td class="ng-binding">DELIVERY</td>
+                    <td class="ng-binding">$5.00</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">1</td>
+                    <td class="ng-binding">$5.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Feb 19, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">4GP-001</td>
+                    <td class="ng-binding">LB</td>
+                    <td class="ng-binding">LABELS</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">($8.00)</td>
+                    <td class="ng-binding">1</td>
+                    <td class="ng-binding">($8.00)</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Feb 19, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">3FA-001</td>
+                    <td class="ng-binding">PPS</td>
+                    <td class="ng-binding">POSITIVE PAY SET UP</td>
+                    <td class="ng-binding">$150.00</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">1</td>
+                    <td class="ng-binding">$150.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Feb 19, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">PBO-01</td>
+                    <td class="ng-binding">POSTERS</td>
+                    <td class="ng-binding">LABOR LAW POSTERS</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">$40.00</td>
+                    <td class="ng-binding">2</td>
+                    <td class="ng-binding">$80.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Mar 10, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">4GL-001</td>
+                    <td class="ng-binding">BCE</td>
+                    <td class="ng-binding">BANK CHARGE EZFEE</td>
+                    <td class="ng-binding">$25.00</td>
+                    <td class="ng-binding">$2.00</td>
+                    <td class="ng-binding">4</td>
+                    <td class="ng-binding">$33.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Mar 18, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">4GL-001</td>
+                    <td class="ng-binding">BG</td>
+                    <td class="ng-binding">BANK CHARGES</td>
+                    <td class="ng-binding">$25.00</td>
+                    <td class="ng-binding">$2.00</td>
+                    <td class="ng-binding">3</td>
+                    <td class="ng-binding">$31.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Mar 18, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">1AA-001</td>
+                    <td class="ng-binding">POSTERS</td>
+                    <td class="ng-binding">LABOR LAW POSTERS</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">$40.00</td>
+                    <td class="ng-binding">0</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Mar 18, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression --><tr class="ng-scope" ng-repeat="manualCharge in manualCharges | filter: filterExpression" ng-click="editChargeItem(manualCharge)">
+                    <td class="ng-binding">1AB-001</td>
+                    <td class="ng-binding">BG</td>
+                    <td class="ng-binding">BANK CHARGES</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td class="ng-binding">0</td>
+                    <td class="ng-binding">$0.00</td>
+                    <td><input class="ng-pristine ng-valid" disabled="disabled" ng-model="manualCharge.isBilled" type="checkbox"></td>
+                    <td class="ng-binding">Mar 18, 2014</td>
+                    <td ng-switch="manualCharge.editable">
+                    <!-- ngSwitchWhen: false -->
+                    </td>
+                </tr><!-- end ngRepeat: manualCharge in manualCharges | filter: filterExpression -->
+                </tbody>
+            </table>
+        </div>
+    </div><!-- end ngIf: !embedded --></div></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>© BDB Payroll Inc.</p>
+    </div>
+
+    <script src="scripts/9d088d72.plugins.js"></script>
+
+    <!-- TODO: Make this not so ugly. Please. -->
+    <script>
+        $(function () {
+            $.feedback({
+                ajaxURL: '/BillingService/api/billing/feedback',
+                html2canvasURL: 'bower_components/feedback/html2canvas.js'
+            });
+        });
+    </script>
+
+    <script src="scripts/67707fcd.closure-out.js"></script>
+
+
+    <script src="directives/search/bdb-search.html" type="application/ng-template" id="bdb-search.html"></script>
+
+    <script src="bower_components/angular-simple-grid/src/simple-grid.html" type="application/ng-template" id="simple-grid.html"></script>
+
+
+
+
+<button style="display: none;" class="feedback-btn feedback-btn-gray">Send feedback</button><div style="display: none;" class="select2-drop-mask" id="select2-drop-mask"></div><div style="left: 15px; top: 124px; bottom: auto; display: none; width: 281px;" class="select2-drop select2-display-none select2-with-searchbox select2-drop-auto-width select2-drop-active">   <div class="select2-search">       <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input" type="text">   </div>   <ul class="select2-results"></ul></div><div style="z-index: 1050;" index="0" window-class="manualChargeModal" modal-window="" class="modal fade manualChargeModal in" ng-class="{in: animate}" ng-style="{'z-index': 1050 + index*10}" ng-transclude=""><div class="manual-charges-edit ng-scope">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="$dismiss('cancel')">×</button>
+        <h3 class="ng-binding">Add Manual Charge
+            <!-- ngIf: !manualCharge.editable -->
+        </h3>
+    </div>
+    <form name="forms.editManualChargeForm" id="editManualChargeForm" class="modal-form ng-pristine ng-invalid ng-invalid-required">
+        <div class="modal-body">
+            <fieldset>
+                <div class="inline-input-control">
+                    <label for="s2id_autogen2">Company</label>
+                    <div style="width: 270px;" id="s2id_manualChargeCompanySelector" class="select2-container division-selector span3 ng-pristine ng-invalid ng-invalid-required"><a href="javascript:void(0)" onclick="return false;" class="select2-choice" tabindex="-1">   <span class="select2-chosen">&nbsp;</span><abbr class="select2-search-choice-close"></abbr>   <span class="select2-arrow"><b></b></span></a><input id="s2id_autogen2" class="select2-focusser select2-offscreen" type="text"><div class="select2-drop select2-display-none select2-with-searchbox">   <div class="select2-search">       <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input" type="text">   </div>   <ul class="select2-results">   </ul></div></div><input tabindex="-1" required="required" id="manualChargeCompanySelector" class="division-selector span3 ng-pristine ng-invalid ng-invalid-required select2-offscreen" ng-model="manualCharge.division" ng-required="true" ui-select2="getDivisionSelect2Options()" ng-disabled="!manualCharge.editable" type="text">
+                </div>
+                <div class="pull-right">
+                    <label for="manualChargeCreatedDate">Created Date</label>
+                    <input id="manualChargeCreatedDate" class="input-small ng-pristine ng-valid hasDatepicker" ui-date="" ng-model="manualCharge.createdDate" disabled="disabled" type="text">
+                </div>
+                <label for="manualChargeItemSelector">Item</label>
+                <!--TODO: Replace with Select2-->
+                <!-- ngIf: divisionItemList -->
+                <!-- ngIf: !divisionItemList --><select ng-if="!divisionItemList" disabled="disabled" class="span3 ng-scope">
+                    <!-- ngIf: manualCharge.division -->
+                </select><!-- end ngIf: !divisionItemList -->
+
+                <label for="manualChargeDescription">Description</label>
+                <input required="required" id="manualChargeDescription" name="manualChargeDescription" class="span3 ng-pristine ng-invalid ng-invalid-required" ng-model="manualCharge.description" ng-required="true" ng-readonly="!manualCharge.editable" type="text">
+
+                <div class="pricingControls">
+                    <div class="inline-input-control">
+                        <label for="manualChargeBasePrice">Base Charge</label>
+                        <input required="required" id="manualChargeBasePrice" class="input-small ng-pristine ng-valid-number ng-valid ng-valid-required" ng-model="manualCharge.basePrice" ng-required="true" ng-change="calculateExtended()" ng-readonly="!manualCharge.editable" type="number">
+                    </div>
+
+                    <!--TODO: Disable if selected item is not countable.-->
+                    <div class="inline-input-control">
+                        <label for="manualChargeUnitPrice">Unit Charge</label>
+                        <input required="required" id="manualChargeUnitPrice" class="input-small ng-pristine ng-valid-number ng-valid ng-valid-required" ng-model="manualCharge.unitPrice" ng-required="true" ng-change="calculateExtended()" ng-readonly="!manualCharge.editable" type="number">
+                    </div>
+
+                    <!--TODO: Disable if selected item is not countable.-->
+                    <div class="inline-input-control">
+                        <label for="manualChargeQuantity">Quantity</label>
+                        <input required="required" id="manualChargeQuantity" class="input-small ng-pristine ng-valid-number ng-valid ng-valid-required" ng-model="manualCharge.quantity" ng-required="true" ng-change="calculateExtended()" ng-readonly="!manualCharge.editable" type="number">
+                    </div>
+
+                    <div class="pull-right">
+                        <label class="ng-binding" for="manualChargeExtPrice">Extended Price</label>
+                        <input id="manualChargeExtPrice" class="input-small ng-pristine ng-valid ng-valid-number" ng-model="manualCharge.extendedPrice" readonly="readonly" type="number">
+                    </div>
+
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <!-- ngIf: allowDelete() -->
+            <div class="statusMessage">
+                <!-- ngIf: saveInProgress -->
+                <!-- ngIf: forms.editManualChargeForm.$invalid --><span ng-if="forms.editManualChargeForm.$invalid" class="text-error ng-scope">Correct the invalid data before saving</span><!-- end ngIf: forms.editManualChargeForm.$invalid -->
+            </div>
+            <!-- ngIf: manualCharge.editable --><button disabled="disabled" type="submit" class="btn btn-success ng-scope" ng-disabled="!allowSave()" ng-click="saveChanges()" ng-if="manualCharge.editable">
+                <!-- ngIf: isNewManualCharge() --><span class="ng-scope" ng-if="isNewManualCharge()"><i class="icon-plus icon-white"></i> Add</span><!-- end ngIf: isNewManualCharge() -->
+                <!-- ngIf: !isNewManualCharge() -->
+            </button><!-- end ngIf: manualCharge.editable -->
+            <button type="button" class="btn" ng-click="$dismiss('cancel')">
+                <!-- ngIf: manualCharge.editable --><span class="ng-scope" ng-if="manualCharge.editable">Cancel</span><!-- end ngIf: manualCharge.editable -->
+                <!-- ngIf: !manualCharge.editable -->
+            </button>
+        </div>
+    </form>
+</div>
+</div><div style="z-index: 1040;" modal-backdrop="" class="modal-backdrop fade in" ng-class="{in: animate}" ng-style="{'z-index': 1040 + index*10}" ng-click="close($event)"></div><div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"><div class="ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all"><a class="ui-datepicker-prev ui-corner-all" data-handler="prev" data-event="click" title="Prev"><span class="ui-icon ui-icon-circle-triangle-w">Prev</span></a><a class="ui-datepicker-next ui-corner-all" data-handler="next" data-event="click" title="Next"><span class="ui-icon ui-icon-circle-triangle-e">Next</span></a><div class="ui-datepicker-title"><select class="ui-datepicker-month" data-handler="selectMonth" data-event="change"><option value="0">Jan</option><option value="1">Feb</option><option value="2" selected="selected">Mar</option><option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option></select><select class="ui-datepicker-year" data-handler="selectYear" data-event="change"><option value="2011">2011</option><option value="2012">2012</option><option value="2013">2013</option><option value="2014" selected="selected">2014</option><option value="2015">2015</option><option value="2016">2016</option></select></div></div><table class="ui-datepicker-calendar"><thead><tr><th class="ui-datepicker-week-end"><span title="Sunday">Su</span></th><th><span title="Monday">Mo</span></th><th><span title="Tuesday">Tu</span></th><th><span title="Wednesday">We</span></th><th><span title="Thursday">Th</span></th><th><span title="Friday">Fr</span></th><th class="ui-datepicker-week-end"><span title="Saturday">Sa</span></th></tr></thead><tbody><tr><td class=" ui-datepicker-week-end ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">1</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">2</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">3</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">4</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">5</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">6</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">7</a></td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">8</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">9</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">10</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">11</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">12</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">13</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">14</a></td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">15</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">16</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">17</a></td><td class=" ui-datepicker-days-cell-over  ui-datepicker-current-day ui-datepicker-today" data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default ui-state-highlight ui-state-active ui-state-hover" href="#">18</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">19</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">20</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">21</a></td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">22</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">23</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">24</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">25</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">26</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">27</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">28</a></td><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">29</a></td></tr><tr><td class=" ui-datepicker-week-end " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">30</a></td><td class=" " data-handler="selectDay" data-event="click" data-month="2" data-year="2014"><a class="ui-state-default" href="#">31</a></td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td><td class=" ui-datepicker-week-end ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">&nbsp;</td></tr></tbody></table><div class="ui-datepicker-buttonpane ui-widget-content"><button type="button" class="ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all" data-handler="today" data-event="click">Today</button><button type="button" class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" data-handler="hide" data-event="click">Done</button></div></div><div style="position: absolute; left: 0px; top: 0px;" id="feedback-module"><div style="display: block;" id="feedback-highlighter"><div class="feedback-logo">Feedback</div><p>Click and drag on the page to help us better understand your feedback. You can move this dialog if it's in the way.</p><button class="feedback-sethighlight feedback-active"><div class="ico"></div><span>Highlight</span></button><label>Highlight areas relevant to your feedback.</label><button class="feedback-setblackout"><div class="ico"></div><span>Black out</span></button><label class="lower">Black out any personal information.</label><div class="feedback-buttons"><button id="feedback-highlighter-next" class="feedback-next-btn feedback-btn-gray">Next</button></div><div class="feedback-wizard-close"></div></div><div id="feedback-overview"><div class="feedback-logo">Feedback</div><div id="feedback-overview-description"><div id="feedback-overview-description-text"><h3>Description</h3><h3 class="feedback-additional">Additional info</h3><div id="feedback-additional-none"><span>None</span></div><div style="display: block;" id="feedback-browser-info"><span>Browser Info</span></div><div style="display: block;" id="feedback-page-info"><span>Page Info</span></div><div id="feedback-page-structure"><span>Page Structure</span></div></div></div><div id="feedback-overview-screenshot"><h3>Screenshot</h3></div><div class="feedback-buttons"><button id="feedback-submit" class="feedback-submit-btn feedback-btn-blue">Submit</button><button id="feedback-overview-back" class="feedback-back-btn feedback-btn-gray">Back</button></div><div id="feedback-overview-error">Please enter a description.</div><div class="feedback-wizard-close"></div></div><canvas style="z-index: 30000; cursor: crosshair;" height="970" width="1903" id="feedback-canvas"></canvas><div id="feedback-helpers"></div><input id="feedback-note" name="feedback-note" type="hidden"></div></body>
